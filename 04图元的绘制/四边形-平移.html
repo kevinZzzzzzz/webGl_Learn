@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .canvas {
+            border: 1px solid red;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <canvas class="canvas" width="500" height="500"></canvas>
+    <!-- 顶点着色器 -->
+            <!-- vec2 movePos = vec2(0.2, 0.2);
+            vec2 scale = vec2(1.5, 1.3);
+            vec2 mewPos = aPosition + movePos;
+            vec2 mewPos2 = aPosition * scale; -->
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec2 aPosition;
+        uniform vec2 uTranslate;
+        void main() {
+            vec2 newPos = aPosition + uTranslate;
+            gl_Position = vec4(newPos, 0.0, 1.0);
+            gl_PointSize = 10.0;
+        }
+    </script>
+    <!-- 片段着色器 -->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision highp float;
+        varying vec4 vColor;
+        void main() {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+    </script>
+
+    <script type="module">
+        import initShader from '../utils/initShader.js';
+        const canvas = document.querySelector('.canvas');
+        const gl = canvas.getContext('webgl');
+        const program = initShader(gl);
+
+        const vertices = new Float32Array([
+            -0.5, 0.5,
+            -0.5, -0.5,
+            0.5, -0.5,
+            0.5, 0.5,
+        ])
+
+        const buffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+
+        const positionLocation = gl.getAttribLocation(program, 'aPosition')
+
+        const uTranslate = gl.getUniformLocation(program, 'uTranslate')
+        const translate = [-0.5, 0.5]
+        gl.uniform2fv(uTranslate, translate)
+
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 2 * Float32Array.BYTES_PER_ELEMENT, 0)
+        gl.enableVertexAttribArray(positionLocation)
+        gl.drawArrays(gl.POINTS, 0, 4)
+        gl.drawArrays(gl.LINE_LOOP, 0, 4)
+
+    </script>
+     
+</body>
+</html>

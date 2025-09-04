@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 顶点着色器 -->
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+    </script>
+    <!-- 片段着色器 -->
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+    </script>
+
+    <script>
+        /**
+         * 数据类型
+         * 基本数据类型 float int bool
+         * 向量数据类型 vec2 vec3 vec4（浮点型）；ivec2 ivec3 ivec4（整型）；bvec2 bvec3 bvec4（布尔型）
+         * 矩阵数据类型 mat2 mat3 mat4
+         * 纹理数据类型 sampler1D sampler2D sampler3D samplerCube
+         */
+
+
+         /**
+         * 变量修饰符
+         * 用于指定变量的作用域、生命周期和用途，不同的修饰符在顶点着色器和片段着色器中起到不同的作用；
+         * atribute：用于顶点着色器中，表示属性变量，只能用于顶点着色器中，并且以属性变量的方式由渲染管线的顶点数据传入；
+         * uniform：用于顶点着色器和片段着色器中，表示统一变量，在顶点着色器和片段着色器中都可以使用，并且可以在渲染管线中进行赋值；
+         * varying：用于顶点着色器和片段着色器中，表示变化量变量，在顶点着色器中可以使用，并且可以在渲染管线中进行赋值，在片段着色器中可以使用，但是不能在渲染管线中进行赋值；
+         */
+
+         /**
+          * 内置变量
+          * 顶点着色器内置变量：
+          * gl_Position：顶点位置变量，用于指定顶点的位置，必须在顶点着色器中进行赋值；
+          * gl_PointSize：点大小变量，用于指定点的大小，必须在顶点着色器中进行赋值；    
+          * gl_PointCoord：点坐标变量，用于指定点的坐标，必须在顶点着色器中进行赋值；
+          * gl_ClipVertex：裁剪顶点变量，用于指定裁剪顶点的位置，必须在顶点着色器中进行赋值；
+          * 片段着色器内置变量：
+          * gl_FragColor：片段颜色变量，用于指定片段的颜色，必须在片段着色器中进行赋值；
+          * gl_FragDepth：片段深度变量，用于指定片段的深度，必须在片段着色器中进行赋值；
+          * gl_FragCoord：片段坐标变量，用于指定片段的坐标，必须在片段着色器中进行赋值；
+          */
+
+        /** 
+         * webGl API接口使用
+         * 创建着色器对象
+         * WebGlRenderingContext.createShader(type)：创建一个着色器对象，type为着色器类型，可以是WebGLRenderingContext.VERTEX_SHADER（顶点着色器）或WebGLRenderingContext.FRAGMENT_SHADER（片段着色器）；
+         * WebGlRenderingContext.shaderSource(shader, source)：将着色器源代码分配给着色器对象，shader为着色器对象，source为着色器源代码；
+         * WebGlRenderingContext.compileShader(shader)：编译着色器对象，shader为着色器对象；
+         * WebGlRenderingContext.getShaderParameter(shader, pname)：获取着色器对象的参数，shader为着色器对象，pname为参数名；
+         * WebGlRenderingContext.getShaderInfoLog(shader)：获取着色器对象的编译信息日志，shader为着色器对象；
+         * WebGlRenderingContext.deleteShader(shader)：删除着色器对象，shader为着色器对象；
+         * 创建程序对象
+         * WebGlRenderingContext.createProgram()：创建一个程序对象；
+         * WebGlRenderingContext.attachShader(program, shader)：将着色器对象附加到程序对象，program为程序对象，shader为着色器对象；
+         * WebGlRenderingContext.linkProgram(program)：链接程序对象，program为程序对象；
+         * WebGlRenderingContext.useProgram(program)：使用程序对象，program为程序对象；
+         * WebGlRenderingContext.getProgramParameter(program, pname)：获取程序对象的参数，program为程序对象，pname为参数名；
+         * WebGlRenderingContext.getProgramInfoLog(program)：获取程序对象的链接信息日志，program为程序对象；
+         * WebGlRenderingContext.deleteProgram(program)：删除程序对象，program为程序对象；
+         */
+    </script>
+</body>
+</html>

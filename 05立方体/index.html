@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="canvas" width="500" height="500"></canvas>
+    <!-- 顶点着色器 -->
+     <!-- 
+            
+            mat4 rotateZ = mat4(
+                cos, -sin, 0.0, 0.0,
+                sin, cos, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            );
+            mat4 rotate = rotateX * rotateY * rotateZ; -->
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 aPosition;
+        void main() {
+            float radian = radians(10.0);
+            float cos = cos(radian);
+            float sin = sin(radian);
+            mat4 rotateX = mat4(
+                1.0, 0.0, 0.0, 0.0,
+                0.0, cos, -sin, 0.0,
+                0.0, sin, cos, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            );
+            mat4 rotateY = mat4(
+                cos, 0.0, -sin, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                sin, 0.0, cos, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            );
+            mat4 rotateZ = mat4(
+                cos, -sin, 0.0, 0.0,
+                sin, cos, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            );
+            gl_Position = rotateX * rotateY * aPosition;
+            
+            gl_PointSize = 10.0;
+        }
+    </script>
+    <!-- 片段着色器 -->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision highp float;
+        varying vec4 vColor;
+        void main() {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+    </script>
+    <script type="module">
+        import initShader from '../utils/initShader.js';
+        const canvas = document.querySelector('.canvas');
+        const gl = canvas.getContext('webgl');
+        const program = initShader(gl);
+
+        const vertices = new Float32Array([
+            0.5, 0.5, 0.5,
+            -0.5, 0.5, 0.5,
+            -0.5, -0.5, 0.5,
+            0.5, -0.5, 0.5,
+
+            0.5, 0.5, -0.5,
+            -0.5, 0.5, -0.5,
+            -0.5, -0.5, -0.5,
+            0.5, -0.5, -0.5,
+
+            0.5, 0.5, 0.5,
+            0.5, 0.5, -0.5,
+            
+            -0.5, 0.5, 0.5,
+            -0.5, 0.5, -0.5,
+
+            -0.5, -0.5, 0.5,
+            -0.5, -0.5, -0.5,
+
+            0.5, -0.5, 0.5,
+            0.5, -0.5, -0.5,
+        ])
+
+        const buffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+
+        const positionLocation = gl.getAttribLocation(program, 'aPosition')
+
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 3 * Float32Array.BYTES_PER_ELEMENT, 0)
+        gl.enableVertexAttribArray(positionLocation)
+        gl.drawArrays(gl.POINTS, 0, 4)
+        gl.drawArrays(gl.LINE_LOOP, 0, 4)
+        gl.drawArrays(gl.POINTS, 4, 4)
+        gl.drawArrays(gl.LINE_LOOP, 4, 4)
+        gl.drawArrays(gl.LINES, 8, 8)
+
+    </script>
+</body>
+</html>

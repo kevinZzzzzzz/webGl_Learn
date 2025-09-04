@@ -1,0 +1,19 @@
+{
+  "name": "demo1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tscW": "tsc --watch",
+    "server": "http-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/three": "^0.146.0",
+    "three": "^0.146.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
