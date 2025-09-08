@@ -1,0 +1,23 @@
+{
+  "name": "three",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinZzzzzzz/webGl_Learn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinZzzzzzz/webGl_Learn/issues"
+  },
+  "homepage": "https://github.com/kevinZzzzzzz/webGl_Learn#readme",
+  "description": "",
+  "devDependencies": {
+    "gl-matrix": "^3.4.4"
+  }
+}
