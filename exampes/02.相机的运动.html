@@ -38,7 +38,7 @@
       );
       // camera.position.z = 5
       // camera.position.y = 0
-      camera.position.set(0, 2, 5)
+      camera.position.set(0, 0, 5)
       camera.lookAt(0, 0, 0); // 更改视野的方向
       // 渲染器
       const renderer = new THREE.WebGLRenderer();
@@ -57,12 +57,17 @@
       scene.add(cube, cube2);
       
 
-
+      let angle = 0
       function animate() {
         cube.rotation.x += 0.01;
         cube.rotation.y += 0.01;
-        cube2.rotation.x -= 0.01;
-        cube2.rotation.y -= 0.01;
+        // cube2.rotation.x -= 0.01;
+        // cube2.rotation.y -= 0.01;
+        const radius = 3
+        angle += 0.01
+        camera.position.x = radius * Math.cos(angle)
+        camera.position.z = radius * Math.sin(angle)
+      camera.lookAt(0, 0, 0); // 更改视野的方向
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
       }
