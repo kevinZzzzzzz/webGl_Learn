@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x000000);
+      // 相机
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 10, 100); // 设置相机位置在y轴10单位处
+      camera.lookAt(0, 0, 0); // 设置相机看向原点(0,0,0)
+
+      const loader = new THREE.TextureLoader();
+      const texture = loader.load("./img1.png");
+      // 渲染器
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true; // 开启渲染器的阴影
+      document.body.appendChild(renderer.domElement);
+
+      // 光源
+      // 环境光
+      const light = new THREE.AmbientLight(0x404040);
+      scene.add(light); 
+      // 定向光
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.castShadow = true; // 开启阴影投射
+      directionalLight.shadow.mapSize.width = 1024; // 向右延伸10个单位
+      directionalLight.shadow.mapSize.height = 1024; // 向上延伸10个单位
+      
+
+      directionalLight.position.set(80, 10, 0)
+      // 辅助光
+      const directionalHelper = new THREE.DirectionalLightHelper(
+        directionalLight,
+        5,
+      );
+      scene.add(directionalLight, directionalHelper);
+
+      const pointLight = new THREE.PointLight(0xffffff,5200, 100);
+      pointLight.castShadow = true;
+      const pointLightHelper = new THREE.PointLightHelper(pointLight, 3);
+      pointLight.position.set(30, 30, 0);
+      scene.add(pointLight, pointLightHelper);
+      /**
+       * 阴影投射：光源 物体 渲染器
+       */
+
+      // 物体
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(100, 100),
+        new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+        })
+      );
+      plane.rotation.x = -Math.PI / 2; // 将平面绕X轴旋转-90度（即逆时针旋转90度）
+      plane.receiveShadow = true; // 开启阴影接收
+      //   plane.rotation.y = -Math.PI / 2; // 将平面绕Y轴旋转-90度（即逆时针旋转90度）
+
+      scene.add(plane);
+
+      const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(20, 20, 20),
+        new THREE.MeshStandardMaterial({
+          color: 0xff0000,
+        })
+      );
+      cube.position.set(0, 10, 0);
+      cube.castShadow = true; // 开启阴影投射
+      scene.add(cube);
+
+
+
+      
+
+      // 轨道控制器
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; // 启用阻尼效果，使相机移动更加平滑
+      controls.dampingFactor = 0.05; // 阻尼系数，值越小，阻尼效果越明显
+      controls.addEventListener("change", () => {
+        // console.log(camera.position);
+        renderer.render(scene, camera);
+      });
+
+      let angle = 0
+      function animate() {
+        angle += 0.01
+        pointLight.position.x = Math.sin(angle) * 30;
+        pointLight.position.z = Math.cos(angle) * 30;
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
