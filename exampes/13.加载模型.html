@@ -16,17 +16,19 @@
         overflow: hidden;
         cursor: pointer;
       }
-      .process {
+      .process, .color-selector {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        top: 10%;
+        right: 10%;
         font-size: 20px;
       }
     </style>
   </head>
   <body>
-    <p class="process">0</p>
+    <p class="process"></p>
+    <div class="color-selector">
+        <input type="color" class="input">
+    </div>
     <script type="module">
       import * as THREE from "three";
       import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -87,12 +89,22 @@
 
       const gltfLoader = new GLTFLoader();
       const process = document.querySelector(".process");
-      gltfLoader.load("./model/Flamingo.glb", (gltf) => {
-        scene.add(gltf.scene);
+      const colorSelector = document.querySelector(".input");
+      let glbRef = null
+      colorSelector.addEventListener("input", (e) => {
+        glbRef.material.color.set(e.target.value)
+      })
+      gltfLoader.load("./model/Flamingo.glb", (glb) => {
+        console.log(glb, 'gltf-----')
+        glb.scene.scale.set(0.02, 0.02, 0.02)
+        glb.scene.position.set(0, 1, 0)
+        glbRef =  glb.scene.children[0]
+        glb.scene.children[0].material.color.set(0x00ffff)
+        scene.add(glb.scene);
       }, (xhr) => {
         console.log("模型加载失败", xhr);
         const pre = xhr.loaded / xhr.total * 100;
-        process.textContent = Math.round(pre, 2) + "%";
+        // process.textContent = Math.round(pre, 2) + "%";
       }, (err) => {
         console.log("模型加载失败", err);
       });
