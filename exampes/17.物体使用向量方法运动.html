@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .process, .color-selector {
+        position: absolute;
+        top: 10%;
+        right: 10%;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import * as THREE from "three";
+      import { scene, camera, renderer, light, controls } from "../utils/three-base.js";
+
+      const endPoint = new THREE.Vector3(0,0,0);
+      camera.position.set(0, 10, 10);
+      camera.lookAt(endPoint);
+
+      const direction = new THREE.Vector3()
+      camera.getWorldDirection(direction) // 相机正视方向向量
+      console.log(direction)
+
+      const origin = new THREE.Vector3(0, 0, 0);
+      const arrow_x_helper = createArrowHelper(origin, origin.clone().add(new THREE.Vector3(10,0,0)), 0xff0000);
+      scene.add(arrow_x_helper);
+
+      const arrow_y_helper = createArrowHelper(origin, origin.clone().add(new THREE.Vector3(0,10,0)), 0x00ff00);
+      scene.add(arrow_y_helper);
+
+      const arrow_z_helper = createArrowHelper(origin, origin.clone().add(new THREE.Vector3(0,0,10)), 0x0000ff);
+      scene.add(arrow_z_helper);
+
+      function createArrowHelper(start, end, color) {
+        // 计算方向向量
+        const direction = new THREE.Vector3().subVectors(end, start).normalize();
+        
+        // 计算箭头长度
+        const length = start.distanceTo(end);
+        
+        // 创建箭头辅助器
+        return new THREE.ArrowHelper(direction, start, length, color);;
+      }
+      
+      // 坐标格辅助对象
+      const gridHelper = new THREE.GridHelper( 20, 20, 0x00ffff, 0x00ffff );
+      scene.add( gridHelper );
+
+      // 添加一个代表人物的舞台
+      const player = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.2, 0.2, 1, 32),
+        new THREE.MeshBasicMaterial({ color: 0x02dd20 })
+      )
+      player.position.set(0, 0.5, 0)
+      scene.add(player)
+
+      const keyEnum = {
+        W: false
+      }
+      window.addEventListener('keydown', (e) => {
+        const keycode = e.key.toUpperCase();
+        if (keyEnum.hasOwnProperty(keycode)) {
+          keyEnum[keycode] = true;
+        }
+      })
+      window.addEventListener('keyup', (e) => {
+        const keycode = e.key.toUpperCase();
+        if (keyEnum.hasOwnProperty(keycode)) {
+          keyEnum[keycode] = false;
+        }
+      })
+
+      const velocity = new THREE.Vector3(1, 0, 3);
+      // velocity.multiplyScalar(0.01)
+
+      const clock = new THREE.Clock();
+      function animate() {
+        if (keyEnum.W) {
+          player.position.addScaledVector(velocity, 0.01);
+        }
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+        controls.update();
+      }
+      requestAnimationFrame(animate);
+    </script>
+    </script>
+  </body>
+</html>
