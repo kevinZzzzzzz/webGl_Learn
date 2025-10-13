@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper.js';
+
+    // 场景
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    // 相机
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(20, 20, 20);
+    camera.lookAt(0, 0, 0);
+
+    // 渲染器
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+    })
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 坐标辅助器
+    const axesHelper = new THREE.AxesHelper(100);
+    scene.add(axesHelper);
+
+    // 轨道控制器
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // 启用阻尼效果，使相机移动更加平滑
+    controls.dampingFactor = 0.05; // 阻尼系数，值越小，阻尼效果越明显
+
+    // 环境光
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // 平行光
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    // 创建一个白色的点光源，强度为8，衰减为0，距离为0
+    const pointLight = new THREE.PointLight(0xffffff, 8, 0);
+    pointLight.position.set(0, 0, 15);
+    scene.add(ambientLight, directionalLight, pointLight);
+
+
+    const boxGeometry = new THREE.BoxGeometry(3, 3, 3, 10, 10);
+    const boxMaterial = new THREE.MeshBasicMaterial({
+      color: 'deepskyblue',
+      wireframe: true, // 开启线框模式
+    })
+    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    scene.add(boxMesh);
+
+    const sphereGeometry = new THREE.SphereGeometry(2, 64, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 'deepskyblue',
+      wireframe: true, // 开启线框模式
+    })
+    const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphereMesh.position.set(5, 0, 5);
+    scene.add(sphereMesh);
+
+    const cylinderGeometry  = new THREE.CylinderGeometry(2, 2, 5);
+    const cylinderMaterial = new THREE.MeshBasicMaterial({
+      color: 'deepskyblue',
+      wireframe: true, // 开启线框模式
+    })
+    const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    cylinderMesh.position.set(10, 0, 10);
+    scene.add(cylinderMesh);
+
+    const planeGeometry = new THREE.PlaneGeometry(3, 3, 4, 4);
+    const planeMaterial = new THREE.MeshBasicMaterial({
+      color: 'deepskyblue',
+      wireframe: true, // 开启线框模式
+    })
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    planeMesh.position.set(15, 0, 15);
+    planeMesh.rotation.y = Math.PI * 3 / 4;
+    scene.add(planeMesh);
+
+    const circleGeometry = new THREE.CircleGeometry(2);
+    const circleMaterial = new THREE.MeshBasicMaterial({
+      color: 'deepskyblue',
+      wireframe: true, // 开启线框模式
+    })
+    const circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
+    circleMesh.position.set(20, 0, 20);
+    circleMesh.rotation.y = Math.PI * 3 / 4;
+    scene.add(circleMesh);
+
+
+    let angle = 0;
+    let scale = 1;
+    let trans = 0;
+    function animate() {
+      planeMesh.rotation.y = Math.PI * angle;
+      circleMesh.rotation.y = -Math.PI * angle;
+      circleMesh.scale.set(scale, scale, scale);
+      circleGeometry.translate(trans, trans, trans)
+      angle += 0.01;
+      scale += 0.01;
+      trans += 0.00001;
+
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+  </script>
+</body>
+</html>

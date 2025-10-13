@@ -92,6 +92,8 @@
 
     const material = new THREE.MeshBasicMaterial({
       color: 'deepskyblue',
+      side:THREE.DoubleSide, // 两面可见
+      wireframe: true // 线框模式
     })
     const point = new THREE.Mesh(geometry, material)
     const normalHelper = new VertexNormalsHelper(point, 2, 'red', 1)
