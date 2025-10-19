@@ -20,7 +20,7 @@
 
     // 场景背景
     scene.background = new THREE.Color(0x87ceff);
-    camera.position.set(0, 0, 8);
+    camera.position.set(0, 2, 8);
     camera.lookAt(0, 0, 0);
     // 加载模型
     let modelAnimation;
@@ -85,7 +85,7 @@
         keyPressed["keys"] ||
         keyPressed["keyd"]
       ) {
-        modelAnimation.updateAction("Ninja|Walk-Pernas");
+        modelAnimation.updateAction("Ninja|Idle-Braços");
       } else {
         modelAnimation.updateAction("Ninja|Idle-Pernas");
       }
@@ -97,13 +97,23 @@
       const cameraDirection = new THREE.Vector3();
       camera?.getWorldDirection(cameraDirection); // 相机方向
       const lookAtPosition = new THREE.Vector3();
+      
+      // 声明一个速度变量
+      const velocity = new THREE.Vector3(0, 0, 0.06);
+      const originalLength = velocity.length();
+
       if (keyPressed["keyw"]) {
         lookAtPosition.set(
-          player?.position.z + cameraDirection.x,
+          player?.position.x + cameraDirection.x,
           player?.position.y,
           player?.position.z + cameraDirection.z
         );
         player?.lookAt(lookAtPosition);
+        // 向前运动代码
+        cameraDirection.y = 0
+        cameraDirection.normalize()
+        cameraDirection.setLength(originalLength);
+        player.position.add(cameraDirection)
       } else if (keyPressed["keya"]) {
         const leftDirection = new THREE.Vector3(-cameraDirection.z, 0, cameraDirection.x);
         lookAtPosition.set(
@@ -112,6 +122,9 @@
           player?.position.z - leftDirection.z
         );
         player?.lookAt(lookAtPosition);
+        // 向左运动代码
+        leftDirection.setLength(originalLength);
+        player.position.add(leftDirection.negate())
       } else if (keyPressed["keys"]) {
         lookAtPosition.set(
           player?.position.x - cameraDirection.x,
@@ -119,14 +132,22 @@
           player?.position.z - cameraDirection.z
         );
         player?.lookAt(lookAtPosition);
+        // 向后运动代码
+        cameraDirection.y = 0
+        cameraDirection.normalize()
+        cameraDirection.setLength(originalLength);
+        player.position.sub(cameraDirection)
       } else if (keyPressed["keyd"]) {
         const rightDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
         lookAtPosition.set(
-          player?.position.z - rightDirection.x,
+          player?.position.x - rightDirection.x,
           player?.position.y,
           player?.position.z - rightDirection.z
         );
         player?.lookAt(lookAtPosition);
+        // 向右运动代码
+        rightDirection.setLength(originalLength);
+        player.position.add(rightDirection.negate())
       }
     };
     /**
