@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body></body>
+  <script type="module">
+    import * as THREE from "three";
+    import { scene, camera, renderer, loadFbx } from "./src/universal.js";
+    import { ground, blocks } from "./src/building.js";
+    import ModelAnimation from "./src/animation.js";
+
+    // 场景背景
+    scene.background = new THREE.Color(0x87ceff);
+    camera.position.set(0, 0, 8);
+    camera.lookAt(0, 0, 0);
+    // 加载模型
+    let modelAnimation;
+    let player = null;
+    const loadModel = async () => {
+      const object = await loadFbx("../exampes/model/ninja2.fbx");
+      console.log(object);
+      object.scale.set(0.02, 0.02, 0.02);
+      object.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      modelAnimation = new ModelAnimation(object);
+      modelAnimation.start("Ninja|Idle-Pernas");
+      scene.add(object);
+      player = object;
+
+      //   const cameraDirection = new THREE.Vector3();
+      //   const playerDirection = new THREE.Vector3();
+      //   camera.getWorldDirection(cameraDirection); // 相机方向
+      //   player.getWorldDirection(playerDirection); // 玩家方向
+    };
+    loadModel();
+
+    // 绑定键盘事件
+    const keyPressed = {};
+    let isJumping = false;
+    document.addEventListener("keydown", (e) => {
+      const keycode = event.code.toLocaleLowerCase();
+      if (keycode === "space" && !isJumping) {
+        isJumping = true;
+        modelAnimation.updateAction("Ninja|Jump-Braços");
+      }
+      keyPressed[keycode] = true;
+    });
+    document.addEventListener("keyup", (e) => {
+      const keycode = event.code.toLocaleLowerCase();
+      keyPressed[keycode] = false;
+      if (keycode === "space" && isJumping) {
+        const jumpTime = modelAnimation.getActionTime("Ninja|Jump-Braços");
+        setTimeout(() => {
+          isJumping = false;
+        }, jumpTime * 100);
+      }
+      modelAnimation.updateAction("Ninja|Idle-Pernas");
+    });
+    // 更新动作
+    const updateAnimation = () => {
+      if (isJumping) return;
+      if (
+        (keyPressed["shiftleft"] && keyPressed["keyw"]) ||
+        (keyPressed["shiftleft"] && keyPressed["keya"]) ||
+        (keyPressed["shiftleft"] && keyPressed["keys"]) ||
+        (keyPressed["shiftleft"] && keyPressed["keyd"])
+      ) {
+        modelAnimation.updateAction("Ninja|Run-Pernas");
+      } else if (
+        keyPressed["keyw"] ||
+        keyPressed["keya"] ||
+        keyPressed["keys"] ||
+        keyPressed["keyd"]
+      ) {
+        modelAnimation.updateAction("Ninja|Walk-Pernas");
+      } else {
+        modelAnimation.updateAction("Ninja|Idle-Pernas");
+      }
+    };
+    scene.add(ground, ...blocks);
+
+    // 更新人物朝向
+    const updateLookAt = () => {
+      const cameraDirection = new THREE.Vector3();
+      camera?.getWorldDirection(cameraDirection); // 相机方向
+      const lookAtPosition = new THREE.Vector3();
+      if (keyPressed["keyw"]) {
+        lookAtPosition.set(
+          player?.position.z + cameraDirection.x,
+          player?.position.y,
+          player?.position.z + cameraDirection.z
+        );
+        player?.lookAt(lookAtPosition);
+      } else if (keyPressed["keya"]) {
+        const leftDirection = new THREE.Vector3(-cameraDirection.z, 0, cameraDirection.x);
+        lookAtPosition.set(
+          player?.position.x - leftDirection.x,
+          player?.position.y,
+          player?.position.z - leftDirection.z
+        );
+        player?.lookAt(lookAtPosition);
+      } else if (keyPressed["keys"]) {
+        lookAtPosition.set(
+          player?.position.x - cameraDirection.x,
+          player?.position.y,
+          player?.position.z - cameraDirection.z
+        );
+        player?.lookAt(lookAtPosition);
+      } else if (keyPressed["keyd"]) {
+        const rightDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
+        lookAtPosition.set(
+          player?.position.z - rightDirection.x,
+          player?.position.y,
+          player?.position.z - rightDirection.z
+        );
+        player?.lookAt(lookAtPosition);
+      }
+    };
+    /**
+     * 动画关键帧函数
+     */
+    const clock = new THREE.Clock();
+    const animate = () => {
+      const dt = clock.getDelta();
+      if (modelAnimation) {
+        modelAnimation.update(dt);
+        updateAnimation();
+      }
+      updateLookAt();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    // 调用动画关键帧函数
+    animate();
+  </script>
+</html>

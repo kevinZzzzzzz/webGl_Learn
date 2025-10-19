@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .process, .color-selector {
+        position: absolute;
+        top: 10%;
+        right: 10%;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import * as THREE from "three";
+      import { scene, camera, renderer, light, controls } from "../utils/three-base.js";
+
+      const endPoint = new THREE.Vector3(0,0,0);
+      camera.position.set(0, 5, 5);
+      camera.lookAt(endPoint);
+
+      const direction = new THREE.Vector3()
+      camera.getWorldDirection(direction) // 相机正视方向向量
+
+      const textureLoader = new THREE.TextureLoader();
+      const colors = [
+       0xff0000,
+       0x00ff00,
+       0x0000ff,
+       0xffff00,
+       0xff00ff,
+       0x00ffff,
+      ]
+      const materials = []
+      const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
+      for (let i = 0; i < colors.length; i++) {
+        const color = colors[i]
+        // const texture = textureLoader.load(color)
+        const boxMaterial = new THREE.MeshBasicMaterial(
+          {color: color}
+        )
+        materials.push(boxMaterial)
+      }
+      const box = new THREE.Mesh(
+        boxGeometry,
+        materials
+      )
+      scene.add(box)
+
+      /**
+       * 四元数（0，0，0，1）Quaternion（x，y，z，w）
+       * 绕着x轴旋转90度
+       */
+      // 旋转30度
+      const angle = (Math.PI / 180) * 90
+      // 1
+      // const halfA = angle / 2
+      // const sinAngle = Math.sin(halfA)
+      // const cosAngle = Math.cos(halfA)
+      // const quaternion = new THREE.Quaternion(
+      //   sinAngle * 1,  // 绕x轴旋转
+      //   sinAngle * 0,
+      //   sinAngle * 0,
+      //   cosAngle
+      // );
+
+      // 2
+      // const quaternion = new THREE.Quaternion()
+      // const axis = new THREE.Vector3(1, 0, 0)
+      // quaternion.setFromAxisAngle(axis, angle)
+
+      // 3
+      // const quaternion = new THREE.Quaternion()
+      // const euler = new THREE.Euler(angle,angle, 0)
+      // quaternion.setFromEuler(euler)
+      
+      // 4
+      // const quaternion = new THREE.Quaternion()
+      // const axis = new THREE.Vector3(1, 0, 0)
+      // const q1 = new THREE.Quaternion()
+      // q1.setFromAxisAngle(axis, angle)
+
+      // const q2 = new THREE.Quaternion()
+      // q2.setFromAxisAngle(axis, angle)
+      // quaternion.multiplyQuaternions(q1, q2)
+
+
+
+      const quaternion = new THREE.Quaternion()
+      quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angle)
+      box.quaternion.copy(quaternion)
+      console.log(box.quaternion)
+
+
+
+      const clock = new THREE.Clock();
+      
+      function animate() {
+        const qx = new THREE.Quaternion()
+        qx.setFromAxisAngle(new THREE.Vector3(1, 0, 0), 0.01)
+        box.quaternion.multiplyQuaternions(qx, box.quaternion)
+
+        const qz = new THREE.Quaternion()
+        qz.setFromAxisAngle(new THREE.Vector3(0, 0, 1), 0.01)
+        box.quaternion.multiplyQuaternions(qz, box.quaternion)
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+        controls.update();
+      }
+      requestAnimationFrame(animate);
+    </script>
+    </script>
+  </body>
+</html>
