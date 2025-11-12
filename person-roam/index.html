@@ -97,7 +97,7 @@
       const cameraDirection = new THREE.Vector3();
       camera?.getWorldDirection(cameraDirection); // 相机方向
       const lookAtPosition = new THREE.Vector3();
-      
+
       // 声明一个速度变量
       const velocity = new THREE.Vector3(0, 0, 0.06);
       const originalLength = velocity.length();
@@ -110,12 +110,16 @@
         );
         player?.lookAt(lookAtPosition);
         // 向前运动代码
-        cameraDirection.y = 0
-        cameraDirection.normalize()
+        cameraDirection.y = 0;
+        cameraDirection.normalize();
         cameraDirection.setLength(originalLength);
-        player.position.add(cameraDirection)
+        player.position.add(cameraDirection);
       } else if (keyPressed["keya"]) {
-        const leftDirection = new THREE.Vector3(-cameraDirection.z, 0, cameraDirection.x);
+        const leftDirection = new THREE.Vector3(
+          -cameraDirection.z,
+          0,
+          cameraDirection.x
+        );
         lookAtPosition.set(
           player?.position.x - leftDirection.x,
           player?.position.y,
@@ -124,7 +128,7 @@
         player?.lookAt(lookAtPosition);
         // 向左运动代码
         leftDirection.setLength(originalLength);
-        player.position.add(leftDirection.negate())
+        player.position.add(leftDirection.negate());
       } else if (keyPressed["keys"]) {
         lookAtPosition.set(
           player?.position.x - cameraDirection.x,
@@ -133,12 +137,16 @@
         );
         player?.lookAt(lookAtPosition);
         // 向后运动代码
-        cameraDirection.y = 0
-        cameraDirection.normalize()
+        cameraDirection.y = 0;
+        cameraDirection.normalize();
         cameraDirection.setLength(originalLength);
-        player.position.sub(cameraDirection)
+        player.position.sub(cameraDirection);
       } else if (keyPressed["keyd"]) {
-        const rightDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
+        const rightDirection = new THREE.Vector3(
+          cameraDirection.z,
+          0,
+          -cameraDirection.x
+        );
         lookAtPosition.set(
           player?.position.x - rightDirection.x,
           player?.position.y,
@@ -147,7 +155,7 @@
         player?.lookAt(lookAtPosition);
         // 向右运动代码
         rightDirection.setLength(originalLength);
-        player.position.add(rightDirection.negate())
+        player.position.add(rightDirection.negate());
       }
     };
     /**

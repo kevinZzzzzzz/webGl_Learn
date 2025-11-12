@@ -11,6 +11,12 @@ importers:
       cannon:
         specifier: ^0.6.2
         version: 0.6.2
+      cannon-es:
+        specifier: ^0.20.0
+        version: 0.20.0
+      cannon-es-debugger:
+        specifier: ^1.0.0
+        version: 1.0.0(cannon-es@0.20.0)(three@0.180.0)
     devDependencies:
       gl-matrix:
         specifier: ^3.4.4
@@ -270,6 +276,19 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  cannon-es-debugger@1.0.0:
+    resolution: {integrity: sha512-sE9lDOBAYFKlh+0w+cvWKwUhJef8HYnUSVPWPL0jD15MAuVRQKno4QYZSGxgOoJkMR3mQqxL4bxys2b3RSWH8g==}
+    peerDependencies:
+      cannon-es: 0.x
+      three: 0.x
+      typescript: '>=3.8'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
+
   cannon@0.6.2:
     resolution: {integrity: sha512-n/7wWSXr8KOSvjad2x0fJHgpMepKjOKi+NdSnjfYyijoDBZnp4JQKgPcpv28jlXoWM+N9zVYU09J0A6Qxx+Y7w==}
 
@@ -476,6 +495,13 @@ snapshots:
     optional: true
 
   '@types/estree@1.0.8': {}
+
+  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.180.0):
+    dependencies:
+      cannon-es: 0.20.0
+      three: 0.180.0
+
+  cannon-es@0.20.0: {}
 
   cannon@0.6.2: {}
 
